@@ -23,9 +23,13 @@ public class MotorControl : MonoBehaviour{
 	IEnumerator ReadAxisVelocity(){
 		var hinge = Axis.GetComponent<HingeJoint>();
         //Print the time of when the function is first called.
-		// variable to read current velocity in degrees/s
-		string statusVelocity = string.Format("current degrees/s: {0}.",hinge.velocity);
-		Debug.Log(statusVelocity);
+		// variable to read current velocity in degrees/s (standard for the programming in the Unity)
+		//is converted to rad/s and rounding to 2 decimal places
+		var statusVelocityRadS = (Mathf.PI*hinge.velocity/180).ToString("#.00");
+		//to show from degree/s to RPM
+		var statusVelocityRPM = (hinge.velocity/6).ToString("#.00");
+		Debug.Log("current angular velocity [rad/s]: " + statusVelocityRadS);
+		Debug.Log("current angular velocity [RPM]: " + statusVelocityRPM);
 
         //yield on a new YieldInstruction that waits for 5 seconds.
         yield return new WaitForSeconds(15);
