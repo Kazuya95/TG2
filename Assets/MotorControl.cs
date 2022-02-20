@@ -12,28 +12,8 @@ public class MotorControl : MonoBehaviour{
 	public GameObject Axis;
 	public GameObject Switch;
 	public float velocity;
-	
-	//to read data
-	void Update(){
-		// repeat the read of velocity data
-		StartCoroutine(ReadAxisVelocity());
-	}
-	
-	// Coroutine to wait 15s to show velocity of axis
-	IEnumerator ReadAxisVelocity(){
-		var hinge = Axis.GetComponent<HingeJoint>();
-        //Print the time of when the function is first called.
-		// variable to read current velocity in degrees/s (standard for the programming in the Unity)
-		//is converted to rad/s and rounding to 2 decimal places
-		var statusVelocityRadS = (Mathf.PI*hinge.velocity/180).ToString("#.00");
-		//to show from degree/s to RPM
-		var statusVelocityRPM = (hinge.velocity/6).ToString("#.00");
-		Debug.Log("current angular velocity [rad/s]: " + statusVelocityRadS);
-		Debug.Log("current angular velocity [RPM]: " + statusVelocityRPM);
-
-        //yield on a new YieldInstruction that waits for 5 seconds.
-        yield return new WaitForSeconds(15);
-    }
+	public int poleNumber;
+	public int frequency;
 	
 	// Control the activation of motor
 	void MotorSystem(bool enableMotor,bool stateMotor,bool fixedAxis){
@@ -55,13 +35,18 @@ public class MotorControl : MonoBehaviour{
 		var switchAction = Switch.GetComponent<Switch_action>();
 		var switchState = switchAction.switchIsOn;
 		
+		// defining number of poles and the frquency of motor.
+		//var frequency = 60;
+		//var poleNumber=4;
+		
 		if (motorIsOn == false && switchState==true){
 			MotorSystem(true,true,false);
 			motorButtonRenderer.material.SetColor("_Color",colorOn);
-			motor.force = 100*10000;
+			motor.force = 1000;
+			
 			// targetVelocity make the hinge motor rotate with degrees per second
-			// adapting this for rad/s
-			motor.targetVelocity = 3600;
+			// converting this for rad/s
+			motor.targetVelocity = 6*120*frequency/poleNumber;
 			motor.freeSpin = false;
 			hinge.motor = motor;
 		}
