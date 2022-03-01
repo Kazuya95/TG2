@@ -11,9 +11,10 @@ public class MotorControl : MonoBehaviour{
 	Color colorOff = Color.red;
 	public GameObject Axis;
 	public GameObject Switch;
-	public float velocity;
-	public int poleNumber;
-	public int frequency;
+	// defining number of poles and the frequency of motor.
+	public float frequency = 60;
+	public float poleNumber=4;
+	
 	
 	// Control the activation of motor
 	void MotorSystem(bool enableMotor,bool stateMotor,bool fixedAxis){
@@ -35,20 +36,18 @@ public class MotorControl : MonoBehaviour{
 		var switchAction = Switch.GetComponent<Switch_action>();
 		var switchState = switchAction.switchIsOn;
 		
-		// defining number of poles and the frquency of motor.
-		//var frequency = 60;
-		//var poleNumber=4;
-		
 		if (motorIsOn == false && switchState==true){
 			MotorSystem(true,true,false);
 			motorButtonRenderer.material.SetColor("_Color",colorOn);
-			motor.force = 1000;
 			
 			// targetVelocity make the hinge motor rotate with degrees per second
 			// converting this for rad/s
 			motor.targetVelocity = 6*120*frequency/poleNumber;
+			//initial value of force of motor
+			motor.force = 10000;
 			motor.freeSpin = false;
 			hinge.motor = motor;
+			
 		}
 		else{
 			MotorSystem(false,false,true);
